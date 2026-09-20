@@ -19,7 +19,7 @@ export default function LoginPage() {
 
   const onSubmit = async (data: any) => {
     try {
-      await login(data);
+      login();
       navigate('/dashboard');
     } catch (error) {
       console.error(error);

@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id // Google OAuth sub
+  email     String   @unique
+  name      String
+  avatarUrl String?
+  roles     String[] @default(["reviewer"])
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  lastLogin DateTime @default(now())
+  reviews   Review[]
+}
+
+model Review {
+  id              String   @id @default(cuid())
+  reviewerId      String
+  reviewer        User     @relation(fields: [reviewerId], references: [id])
+  dateReviewed    DateTime @db.Date
+  durationMinutes Int
+  videoType       String
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([reviewerId, dateReviewed])
+  @@index([dateReviewed])
+}
